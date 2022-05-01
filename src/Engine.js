@@ -1,9 +1,10 @@
 import {Vector} from "./Vector";
 
 export class Engine {
-    constructor(charges, fences) {
+    constructor(charges, fences, noanchor = true) {
         this.charges = charges;
         this.fences = fences;
+        this.noanchor = noanchor;
     }
 
     process() {
@@ -18,18 +19,22 @@ export class Engine {
                             let sign = -Math.sign(other.charge*charge.charge);
                             let angle = Math.atan2(other.position.y-charge.position.y, other.position.x-charge.position.x);
 
-                            if (sign < 0 || r >= 20) {
-                            force.x += f * sign * Math.cos(angle);
-                            force.y += f * sign * Math.sin(angle);
+                            if (sign < 0 || r >= 20 || !this.noanchor) {
+                                force.x += f * sign * Math.cos(angle);
+                                force.y += f * sign * Math.sin(angle);
                             }
                         }
                     }
                 );
                 this.fences.forEach((fence) => {
-                    let distance = fence.getDistance(charge.position);
-                    if (distance < 10) {
-                        force.reset();
-                        charge.velocity.copy(fence.accelaration);
+                    if (fence.active) {
+                        let distance = fence.getDistance(charge.position);
+                        if (distance < 10) {
+                            if (fence.check(charge.position)) {
+                                force.reset();
+                                charge.velocity.copy(fence.accelaration);
+                            }
+                        }
                     }
                 });
                 charge.acceleration = force;

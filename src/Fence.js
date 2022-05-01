@@ -9,6 +9,19 @@ export class Fence {
         this.mid.x /= 2;
         this.mid.y /= 2;
         this.accelaration = accelaration;
+
+        this.active = true;
+        this.directed = false;
+    }
+
+    check(vector) {
+        if (this.directed) {
+            if (vector.y > this.start.y) {
+                return true;
+            }
+            return false;
+        }
+        return true;
     }
 
     getDistance(vector) {

@@ -24,11 +24,17 @@ export class Viewport {
         ctx.strokeStyle = "white";
         this.fences.forEach((fence) => {
             ctx.beginPath();
+            if (fence.active) {
+                ctx.setLineDash([]);
+            } else {
+                ctx.setLineDash([5, 15]);
+            }
             ctx.moveTo(fence.start.x, fence.start.y);
             ctx.lineTo(fence.end.x, fence.end.y);
             ctx.stroke();
         });
 
+        ctx.setLineDash([]);
         this.charges.forEach((charge) => {
             if (charge.charge < 0) {
                 ctx.strokeStyle = "rgba(0, 128, 0, 255)";

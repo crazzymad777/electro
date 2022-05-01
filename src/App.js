@@ -82,6 +82,11 @@ export class App {
         this.fences = this.fences.concat(this.makeBox([new Vector(width10, height10), new Vector(width, height)], 1));
         this.fences = this.fences.concat(this.makeBox([new Vector(width10*2, height10*2), new Vector(width-width10, height-height10)], -1));
 
+        let fence = new Fence(new Vector(width10, height-height10), new Vector(width10*2, height-height10), new Vector(0, -1));
+        fence.directed = true;
+        this.fences.push(fence);
+        // this.fences.forEach((fence) => { fence.directed = true });
+
         this.viewport.fences = this.fences;
         this.engine = new Engine(this.charges, this.fences);
     }
