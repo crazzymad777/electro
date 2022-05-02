@@ -11,7 +11,9 @@ export class Charge {
         this.dryVelocity = new Vector(0, 0);
         this.dryPosition = Vector.clone(position);
 
+        this.fired = 0;
         this.charge = charge;
+        this.maxspeed = 0.5;
     }
 
     getDistance(other) {
@@ -19,6 +21,9 @@ export class Charge {
     }
 
     process() {
+        if (this.fired > 0) {
+            this.fired--;
+        }
         this.lastAcceleration = this.calc({
             velocity: this.velocity,
             acceleration: this.acceleration,
@@ -38,12 +43,18 @@ export class Charge {
     }
 
     calc(triple) {
+        // let friction = 0.99;
         triple.velocity.add(triple.acceleration);
-        let a = triple.velocity.abs();
-        if (a > 1) {
-            triple.velocity.x = triple.velocity.x / a;
-            triple.velocity.y = triple.velocity.y / a;
+        if (this.fired <= 0) {
+            let a = triple.velocity.abs();
+            if (a > this.maxspeed) {
+                triple.velocity.x = this.maxspeed * triple.velocity.x / a;
+                triple.velocity.y = this.maxspeed * triple.velocity.y / a;
+            }
         }
+        // triple.velocity.x *= friction;
+        // triple.velocity.y *= friction;
+
         triple.position.add(triple.velocity);
         let lastAcceleration = Vector.clone(triple.acceleration);
         triple.acceleration.reset();

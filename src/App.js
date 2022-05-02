@@ -29,7 +29,8 @@ export class App {
     }
 
     constructor(viewport) {
-        this.area = {width: viewport.width, height: viewport.height};
+        let m = 1000;
+        this.area = {width: viewport.height, height: viewport.height};
 
         let width10 = this.area.width/10;
         let height10 = this.area.height/10;
@@ -46,34 +47,55 @@ export class App {
             for (let y = 0; y < 30; y++) {
                 let vector = new Vector(width10/3*x + width10/5, height10/3*y + height10/5);
                 if (this.checkBox(vector)) {
-                    this.charges.push(new Anchor(50, vector));
+                    let ch = m;
+
+                    if (y === 23 && x >= 7 && x < 10) {
+                        this.charges.push(new Anchor(m*10, Vector.clone(vector)));
+                    }
+
+                    if (y === 6 && x >= 7 && x < 10) {
+                        this.charges.push(new Anchor(-m*10, Vector.clone(vector)));
+                    }
+
+                    if (x > 7) {
+                        if (y >= 7 && y <= 23 && x < 10) {
+                            ch = -m;
+
+                            // this.charges.push(new Anchor(-m, Vector.clone(vector)));
+                            // this.charges.push(new Charge(m, Vector.clone(vector)));
+                            // this.charges.push(new Charge(m, Vector.clone(vector)));
+                            // this.charges.push(new Charge(-m, Vector.clone(vector)));
+                        } else {
+                            ch = m;
+
+                            // this.charges.push(new Anchor(m, vector));
+                        }
+                    }
+                    // for (let i = 0; i < Math.random()*10; i++) {
+                        let vec = Vector.clone(vector);
+                        vec.x += Math.random();
+                        vec.y += Math.random();
+                        this.charges.push(new Charge(ch * -1, vec));
+                    // this.charges.push(new Charge(ch * -1, vec));
+                    // }
                     anchors++;
                 }
+                // else {
+                //     if (x === 2 || y === 2 || x === 6 || y === 6 || x === 23 || y === 23 || x === 27 || y === 27) {
+                //         this.charges.push(new Anchor(-m, vector));
+                //     }
+                // }
             }
         }
 
-        for (let i = 0; i < anchors; i++) {
-            // let ch = i < 50 ? -1 : 1;
-            let ch = -50;
-            // let ch = -1;
-            let vector = new Vector(this.random(width10, width), this.random(height10, height));
-            // while (!this.checkBox(vector)) {
-            while(vector.x >= width10*2 && vector.x <= width-width10) {
-                vector = new Vector(this.random(width10, width), this.random(height10, height));
-            }
-            let charge = new Charge(ch, vector);
-            this.charges.push(charge);
-        }
-        // for (let i = 0; i < 8; i++) {
-        //     this.charges.push(new Anchor(50, new Vector(width10 + (width10 / 2) + (width10 * i), height10 + height10 / 2)));
+        // for (let i = 0; i < anchors; i++) {
+        //     let vector = new Vector(this.random(width10, width), this.random(height10, height));
+        //     while (!this.checkBox(vector)) {
+        //         vector = new Vector(this.random(width10, width), this.random(height10, height));
+        //     }
+        //     let charge = new Charge(m*-1, vector);
+        //     this.charges.push(charge);
         // }
-        // for (let i = 0; i < 8; i++) {
-        //     this.charges.push(new Anchor(50, new Vector(width10 + (width10 / 2) + (width10 * i), height - height10 / 2)));
-        // }
-        // for (let i = 0; i < 8; i++) {
-        //     this.charges.push(new Anchor(50, new Vector(width10 + width10 / 2, (height10 + height10 / 2) + (height10 * i))));
-        // }
-
 
         this.viewport.charges = this.charges;
 
@@ -81,10 +103,23 @@ export class App {
         this.fences = [];
         this.fences = this.fences.concat(this.makeBox([new Vector(width10, height10), new Vector(width, height)], 1));
         this.fences = this.fences.concat(this.makeBox([new Vector(width10*2, height10*2), new Vector(width-width10, height-height10)], -1));
+        // this.fences.forEach((fence) => { fence.active = false });
 
-        let fence = new Fence(new Vector(width10, height-height10), new Vector(width10*2, height-height10), new Vector(0, -1));
+        let fence = new Fence(new Vector(width10, height-height10), new Vector(width10*2, height-height10), new Vector(0, -10), 30);
         fence.directed = true;
         this.fences.push(fence);
+
+        let fence2 = new Fence(new Vector(width10, height-height10-height10/3), new Vector(width10*2, height-height10-height10/3), new Vector(0, -10), 30);
+        fence2.directed = true;
+        this.fences.push(fence2);
+
+        let fence3 = new Fence(new Vector(width10, height10*2 + height10/3), new Vector(width10*2, height10*2 + height10/3), new Vector(0, -10), 30);
+        fence3.directed = true;
+        this.fences.push(fence3);
+
+        let fence4 = new Fence(new Vector(width10, height10*2 + height10/3 - height10/3), new Vector(width10*2, height10*2 + height10/3 - height10/3), new Vector(0, -10), 30);
+        fence4.directed = true;
+        this.fences.push(fence4);
         // this.fences.forEach((fence) => { fence.directed = true });
 
         this.viewport.fences = this.fences;
@@ -107,7 +142,7 @@ export class App {
         setInterval(() => {
             this.engine.process();
             this.process()
-        }, 50);
+        }, 5);
     }
 
     process() {

@@ -21,8 +21,12 @@ export class Viewport {
         ctx.fillStyle = "rgba(32, 32, 32, 255)";
         ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-        ctx.strokeStyle = "white";
         this.fences.forEach((fence) => {
+            if (fence.directed) {
+                ctx.strokeStyle = "yellow";
+            } else {
+                ctx.strokeStyle = "white";
+            }
             ctx.beginPath();
             if (fence.active) {
                 ctx.setLineDash([]);
@@ -34,10 +38,13 @@ export class Viewport {
             ctx.stroke();
         });
 
+        ctx.strokeStyle = "white";
         ctx.setLineDash([]);
         this.charges.forEach((charge) => {
             if (charge.charge < 0) {
                 ctx.strokeStyle = "rgba(0, 128, 0, 255)";
+            } else if (charge.charge === 0) {
+                ctx.strokeStyle = "rgba(128, 128, 128, 255)";
             } else {
                 ctx.strokeStyle = "rgba(128, 0, 0, 255)";
             }

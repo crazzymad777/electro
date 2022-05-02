@@ -1,7 +1,7 @@
 import {Vector} from "./Vector";
 
 export class Fence {
-    constructor(start, end, accelaration) {
+    constructor(start, end, accelaration, distance = 10) {
         this.start = start;
         this.end = end;
         this.mid = Vector.clone(this.start);
@@ -9,6 +9,7 @@ export class Fence {
         this.mid.x /= 2;
         this.mid.y /= 2;
         this.accelaration = accelaration;
+        this.distance = distance;
 
         this.active = true;
         this.directed = false;
@@ -59,7 +60,7 @@ function pDistance(x, y, x1, y1, x2, y2) {
     var dot = A * C + B * D;
     var len_sq = C * C + D * D;
     var param = -1;
-    if (len_sq != 0) //in case of 0 length line
+    if (len_sq !== 0) //in case of 0 length line
         param = dot / len_sq;
 
     var xx, yy;
