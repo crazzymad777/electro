@@ -21,10 +21,20 @@ export class Engine {
                             //     a = 1;
                             // }
                             let f = Math.abs(other.charge)/Math.pow(r, 2);
+                            let angle = Math.atan2(other.position.y - charge.position.y, other.position.x - charge.position.x);
+
+                            if (other.isAnchor) {
+                                if (other.direction) {
+                                    let min = other.direction - Math.PI/2;
+                                    let max = other.direction + Math.PI/2;
+                                    if (angle > max || angle < min) {
+                                        f = 0;
+                                    }
+                                }
+                            }
 
                             if (isFinite(f)) {
                                 let sign = -Math.sign(other.charge * charge.charge);
-                                let angle = Math.atan2(other.position.y - charge.position.y, other.position.x - charge.position.x);
 
                                 if (sign < 0 || r >= 10 || !this.noanchor) {
                                     force.x += f * sign * Math.cos(angle);

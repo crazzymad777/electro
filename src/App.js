@@ -29,7 +29,7 @@ export class App {
     }
 
     constructor(viewport) {
-        let m = 1000;
+        let m = 10;
         this.area = {width: viewport.height, height: viewport.height};
 
         let width10 = this.area.width/10;
@@ -49,20 +49,22 @@ export class App {
                 if (this.checkBox(vector)) {
                     let ch = m;
 
-                    if (y === 23 && x >= 7 && x < 10) {
-                        this.charges.push(new Anchor(m*10, Vector.clone(vector)));
+                    if (y === 23 && x < 10) {
+                        let anchor = new Anchor(m*10, Vector.clone(vector));
+                        this.charges.push(anchor);
+                        anchor.direction = -Math.PI/2;
                     }
 
-                    if (y === 6 && x >= 7 && x < 10) {
-                        this.charges.push(new Anchor(-m*10, Vector.clone(vector)));
+                    if (y === 6 && x < 10) {
+                        let anchor = new Anchor(-m*10, Vector.clone(vector));
+                        this.charges.push(anchor);
+                        anchor.direction = Math.PI/2;
                     }
 
-                    if (x > 7) {
-                        if (y >= 7 && y <= 23 && x < 10) {
+                    if (y !== 6 || x > 7) {
+                        if (y >= 7 && y < 23 && x < 10) {
                             ch = -m;
 
-                            // this.charges.push(new Anchor(-m, Vector.clone(vector)));
-                            // this.charges.push(new Charge(m, Vector.clone(vector)));
                             // this.charges.push(new Charge(m, Vector.clone(vector)));
                             // this.charges.push(new Charge(-m, Vector.clone(vector)));
                         } else {

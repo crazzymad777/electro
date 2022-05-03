@@ -9,6 +9,7 @@ export class Anchor extends Charge {
         this.empty = true;
         this.velocity = new Vector(0, 0);
         this.acceleration = new Vector(0, 0);
+        this.direction = null;
     }
 
     process() {
