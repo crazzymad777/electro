@@ -1,0 +1,4 @@
+FROM atlant
+
+COPY dist .
+
